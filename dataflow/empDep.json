@@ -1,0 +1,80 @@
+{
+	"name": "empDep",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp",
+						"type": "DatasetReference"
+					},
+					"name": "emp"
+				},
+				{
+					"dataset": {
+						"referenceName": "dep",
+						"type": "DatasetReference"
+					},
+					"name": "dep"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "outData",
+						"type": "DatasetReference"
+					},
+					"name": "outputData"
+				}
+			],
+			"transformations": [
+				{
+					"name": "empDep"
+				},
+				{
+					"name": "filter1",
+					"description": "Filtering rows using expressions on columns ' department' (like where in sql)"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          empid as string,",
+				"          { name} as string,",
+				"          { country} as string,",
+				"          { department} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> emp",
+				"source(output(",
+				"          depid as string,",
+				"          depname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dep",
+				"filter1, dep join({ department} == depid,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> empDep",
+				"emp filter(notEquals({ department},'6')) ~> filter1",
+				"empDep sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['empDep'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     mapColumn(",
+				"          empid,",
+				"          { name},",
+				"          { country},",
+				"          depname,",
+				"          depid",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> outputData"
+			]
+		}
+	}
+}

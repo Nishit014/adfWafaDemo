@@ -1,0 +1,79 @@
+{
+	"name": "switchWeb_api",
+	"properties": {
+		"activities": [
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.case",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "post",
+							"activities": [
+								{
+									"name": "Web_post",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"method": "POST",
+										"url": "\thttps://dummy.restapiexample.com/api/v1/create",
+										"body": {
+											"name": "test",
+											"salary": "123",
+											"age": "23"
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "get",
+							"activities": [
+								{
+									"name": "Web_get",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"method": "GET",
+										"url": "https://dummy.restapiexample.com/api/v1/employees"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"case": {
+				"type": "string",
+				"defaultValue": "get"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-24T10:23:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

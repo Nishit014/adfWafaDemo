@@ -1,0 +1,88 @@
+{
+	"name": "dynamicSqlPipeline",
+	"properties": {
+		"description": "copy data from 1 table to another in sql",
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dynamicTablesDb",
+						"type": "DatasetReference",
+						"parameters": {
+							"db_name_frm_dataset": {
+								"value": "@pipeline().parameters.db_name_pipeline",
+								"type": "Expression"
+							},
+							"table_name": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dynamicTablesDb",
+						"type": "DatasetReference",
+						"parameters": {
+							"db_name_frm_dataset": {
+								"value": "@pipeline().parameters.db_name_pipeline",
+								"type": "Expression"
+							},
+							"table_name": {
+								"value": "@pipeline().parameters.destinationTable",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"db_name_pipeline": {
+				"type": "String"
+			},
+			"sourceTable": {
+				"type": "String"
+			},
+			"destinationTable": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-22T06:26:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,32 @@
+{
+	"name": "TumblingTrigger",
+	"properties": {
+		"description": "self dependent trigger",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "copydata_triggers",
+				"type": "PipelineReference"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Month",
+			"interval": 1,
+			"startTime": "2024-08-19T08:08:00Z",
+			"endTime": "2024-09-25T08:08:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": [
+				{
+					"type": "SelfDependencyTumblingWindowTriggerReference",
+					"offset": "-30.10:00:00"
+				}
+			]
+		}
+	}
+}

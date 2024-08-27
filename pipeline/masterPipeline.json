@@ -1,0 +1,61 @@
+{
+	"name": "masterPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute deleteFiles",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "deleteFiles",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute copydata_triggers",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute deleteFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "copydata_triggers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourcePath": "jkm",
+						"sourceFile": {
+							"value": "@pipeline().parameters.master_fileName",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"master_fileName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-23T13:19:15Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

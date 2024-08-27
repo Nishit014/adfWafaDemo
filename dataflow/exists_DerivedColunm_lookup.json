@@ -1,0 +1,92 @@
+{
+	"name": "exists_DerivedColunm_lookup",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp",
+						"type": "DatasetReference"
+					},
+					"name": "emp",
+					"description": "Import data from emp also used branching"
+				},
+				{
+					"dataset": {
+						"referenceName": "dep",
+						"type": "DatasetReference"
+					},
+					"name": "dep"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "outData",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "outData",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "notExists"
+				},
+				{
+					"name": "lookup1",
+					"description": "Lookup on 'emp1' from 'dep2' (its same as left join)"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          empid as string,",
+				"          name as string,",
+				"          country as string,",
+				"          department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> emp",
+				"source(output(",
+				"          depid as string,",
+				"          depname as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dep",
+				"notExists derive(country = upper(country),",
+				"          newCountryColunm = iif(isNull({country}), 'Unknown', upper ({country}))) ~> derivedColumn1",
+				"emp, dep exists(department == depid,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> notExists",
+				"emp, dep lookup(department == depid,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['derivedData'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"lookup1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['lookupData'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2"
+			]
+		}
+	}
+}

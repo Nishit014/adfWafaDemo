@@ -1,0 +1,34 @@
+{
+	"name": "dynamicTablesDb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "multiple_sql_db",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"db_name": {
+					"value": "@dataset().db_name_frm_dataset",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"db_name_frm_dataset": {
+				"type": "String"
+			},
+			"table_name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

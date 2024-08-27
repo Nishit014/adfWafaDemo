@@ -1,0 +1,30 @@
+{
+	"name": "eventTrigger",
+	"properties": {
+		"description": "with parameters",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "copydata_triggers",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourcePath": "@triggerBody().filePath",
+					"sourceFile": "@triggerBody().fileName"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/adfdemo/blobs/input/",
+			"blobPathEndsWith": ".txt",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/61324558-7f3d-4157-94c4-11ff85279d78/resourceGroups/ADF_WAFA_RG_/providers/Microsoft.Storage/storageAccounts/adfwafastorage",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

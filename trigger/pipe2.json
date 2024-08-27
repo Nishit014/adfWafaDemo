@@ -1,0 +1,29 @@
+{
+	"name": "pipe2",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "dynamicSqlPipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"db_name_pipeline": "testDb",
+					"sourceTable": "testTable1",
+					"destinationTable": "testTable2"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2024-08-22T05:55:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}

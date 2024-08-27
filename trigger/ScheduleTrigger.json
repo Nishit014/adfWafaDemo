@@ -1,0 +1,30 @@
+{
+	"name": "ScheduleTrigger",
+	"properties": {
+		"description": "hello trigger",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "copydata_triggers",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 1,
+				"startTime": "2024-08-19T07:34:00",
+				"timeZone": "India Standard Time",
+				"schedule": {
+					"monthDays": [
+						-1
+					]
+				}
+			}
+		}
+	}
+}

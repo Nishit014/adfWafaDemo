@@ -1,0 +1,27 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SystemVariables",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"ExecutionDate": "@formatDateTime(@trigger().scheduledTime,\"YYYY-MM-DD\")"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2024-08-22T06:15:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
