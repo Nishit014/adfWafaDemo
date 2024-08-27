@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfWafaDf"
+		},
+		"adf_linkedservice_demo_connectionString": {
+			"value": ""
+		},
+		"multiple_sql_db_password": {
+			"value": ""
+		},
+		"AzureKeyVault1_linkedService_properties_typeProperties_baseUrl": {
+			"value": "https://first-keyVault-wafa.vault.azure.net/"
+		},
+		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
+			"value": "sec-adfWafa"
+		},
+		"multiple_sql_db_properties_typeProperties_server": {
+			"value": "xyz"
+		},
+		"multiple_sql_db_properties_typeProperties_database": {
+			"value": "@{linkedService().db_name}"
+		},
+		"multiple_sql_db_properties_typeProperties_userName": {
+			"value": "qwer"
+		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
+			"value": "@triggerBody().filePath"
+		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"eventTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/61324558-7f3d-4157-94c4-11ff85279d78/resourceGroups/ADF_WAFA_RG_/providers/Microsoft.Storage/storageAccounts/adfwafastorage"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
+			"value": "testDb"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
+			"value": "testTable1"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
+			"value": "testTable2"
+		},
+		"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
+			"value": "@formatDateTime(@trigger().scheduledTime,\"YYYY-MM-DD\")"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

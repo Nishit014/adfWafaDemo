@@ -1,0 +1,180 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfWafaDf"
+		},
+		"adf_linkedservice_demo_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adf_linkedservice_demo'"
+		},
+		"multiple_sql_db_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'multiple_sql_db'"
+		},
+		"AzureKeyVault1_linkedService_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://first-keyVault-wafa.vault.azure.net/"
+		},
+		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sec-adfWafa"
+		},
+		"multiple_sql_db_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "xyz"
+		},
+		"multiple_sql_db_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().db_name}"
+		},
+		"multiple_sql_db_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "qwer"
+		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
+			"type": "string",
+			"defaultValue": "@triggerBody().filePath"
+		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"eventTrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/61324558-7f3d-4157-94c4-11ff85279d78/resourceGroups/ADF_WAFA_RG_/providers/Microsoft.Storage/storageAccounts/adfwafastorage"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
+			"type": "string",
+			"defaultValue": "testDb"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "testTable1"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
+			"type": "string",
+			"defaultValue": "testTable2"
+		},
+		"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
+			"type": "string",
+			"defaultValue": "@formatDateTime(@trigger().scheduledTime,\"YYYY-MM-DD\")"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adfWafaDf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"adf_linkedservice_demo_connectionString": {
+						"value": "[parameters('adf_linkedservice_demo_connectionString')]"
+					},
+					"multiple_sql_db_password": {
+						"value": "[parameters('multiple_sql_db_password')]"
+					},
+					"AzureKeyVault1_linkedService_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_linkedService_properties_typeProperties_baseUrl')]"
+					},
+					"multiple_sql_db_properties_typeProperties_server": {
+						"value": "[parameters('multiple_sql_db_properties_typeProperties_server')]"
+					},
+					"multiple_sql_db_properties_typeProperties_database": {
+						"value": "[parameters('multiple_sql_db_properties_typeProperties_database')]"
+					},
+					"multiple_sql_db_properties_typeProperties_userName": {
+						"value": "[parameters('multiple_sql_db_properties_typeProperties_userName')]"
+					},
+					"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adfWafaDf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfWafaDf_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "adfWafaDf_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
+						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourcePath')]"
+					},
+					"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
+						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourceFile')]"
+					},
+					"eventTrigger_properties_typeProperties_scope": {
+						"value": "[parameters('eventTrigger_properties_typeProperties_scope')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_sourceTable')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
+					},
+					"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
+						"value": "[parameters('trigger1_properties_SystemVariables_parameters_ExecutionDate')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfWafaDf_ArmTemplate_1')]"
+			]
+		}
+	]
+}
