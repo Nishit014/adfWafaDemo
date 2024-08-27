@@ -1,0 +1,11 @@
+{
+	"name": "AzureKeyVault1_linkedService",
+	"properties": {
+		"description": "linked service for first-keyVault-wafa",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://first-keyVault-wafa.vault.azure.net/"
+		}
+	}
+}
