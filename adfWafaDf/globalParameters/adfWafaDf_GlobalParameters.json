@@ -1,1 +1,6 @@
-{}
+{
+	"globalParameter": {
+		"type": "string",
+		"value": "some constant value common over every pipeline"
+	}
+}

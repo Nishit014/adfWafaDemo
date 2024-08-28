@@ -1277,6 +1277,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "emp"
+						},
+						{
+							"dataset": {
+								"referenceName": "emp3",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
 						}
 					],
 					"sinks": [
@@ -1286,11 +1293,21 @@
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "outData",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
 						}
 					],
 					"transformations": [
 						{
 							"name": "sort"
+						},
+						{
+							"name": "rank1"
 						}
 					],
 					"scriptLines": [
@@ -1303,14 +1320,33 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> emp",
+						"source(output(",
+						"          id as string,",
+						"          name as string,",
+						"          gender as string,",
+						"          country as string,",
+						"          salary as string,",
+						"          department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
 						"emp sort(asc(name, true),",
 						"     caseInsensitive: true) ~> sort",
+						"source1 rank(asc(salary, true),",
+						"     output(rankBySalary as long)) ~> rank1",
 						"sort sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     partitionFileNames:['sort'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
+						"     partitionBy('hash', 1)) ~> sink1",
+						"rank1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['rankedEmp3'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2"
 					]
 				}
 			},
@@ -1725,7 +1761,9 @@
 								"parameters": {},
 								"datasetParameters": {
 									"emp": {},
-									"sink1": {}
+									"source1": {},
+									"sink1": {},
+									"sink2": {}
 								}
 							},
 							"staging": {},
