@@ -1264,7 +1264,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sort')]",
+			"name": "[concat(parameters('factoryName'), '/sort_rank')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1737,7 +1737,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sort')]",
+			"name": "[concat(parameters('factoryName'), '/sortRank')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1756,7 +1756,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "sort",
+								"referenceName": "sort_rank",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1782,7 +1782,7 @@
 				"lastPublishTime": "2024-08-25T18:09:50Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/sort')]"
+				"[concat(variables('factoryId'), '/dataflows/sort_rank')]"
 			]
 		},
 		{
