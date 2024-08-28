@@ -1,5 +1,5 @@
 {
-	"name": "sort",
+	"name": "sortRank",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "sort",
+						"referenceName": "sort_rank",
 						"type": "DataFlowReference"
 					},
 					"compute": {
