@@ -1,5 +1,13 @@
 {
 	"name": "adfWafaDf",
+	"properties": {
+		"globalParameters": {
+			"globalParameter": {
+				"type": "string",
+				"value": "some constant value common over every pipeline"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
