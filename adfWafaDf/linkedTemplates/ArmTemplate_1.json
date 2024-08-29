@@ -1040,7 +1040,7 @@
 						"source2 keyGenerate(output(emp_id as long),",
 						"     startAt: 1L,",
 						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 derive(emp_id = toInteger(emp_id) + toInteger(cachedEmpId#outputs().emp_id)) ~> derivedColumn1",
+						"surrogateKey1 derive(emp_id = emp_id + cachedEmpId#outputs()[0].emp_id) ~> derivedColumn1",
 						"source1 aggregate(emp_id = max(emp_id)) ~> aggregate1",
 						"derivedColumn1, source1 union(byName: true)~> union1",
 						"aggregate1 sink(validateSchema: false,",
@@ -1048,7 +1048,7 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     store: 'cache',",
 						"     format: 'inline',",
-						"     output: false,",
+						"     output: true,",
 						"     saveOrder: 1,",
 						"     mapColumn(",
 						"          emp_id",
@@ -1705,7 +1705,10 @@
 								"coreCount": 8,
 								"computeType": "General"
 							},
-							"traceLevel": "Fine"
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
 						}
 					}
 				],
