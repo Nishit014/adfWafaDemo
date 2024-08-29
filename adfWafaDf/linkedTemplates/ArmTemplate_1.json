@@ -1860,10 +1860,39 @@
 								"firstRowOnly": true
 							}
 						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "cache sink to activity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "maxSalary",
+							"value": {
+								"value": "@string(activity('cache sink to activity').output.runStatus.output.sink1.value[0].MaxSal)",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"maxSalary": {
+						"type": "String"
+					}
 				},
 				"annotations": []
 			},
