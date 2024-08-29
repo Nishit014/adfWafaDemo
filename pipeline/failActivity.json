@@ -26,14 +26,9 @@
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "BinarySink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
 						}
 					},
 					"enableStaging": false
@@ -49,7 +44,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "outData",
+						"referenceName": "outputDataSet",
 						"type": "DatasetReference"
 					}
 				]
@@ -78,9 +73,12 @@
 						"referenceName": "emp3",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"itemName"
+					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -99,7 +97,11 @@
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"message": "copy fail",
+					"errorCode": "404"
+				}
 			}
 		],
 		"annotations": []
