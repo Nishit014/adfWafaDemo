@@ -352,7 +352,7 @@
 						"typeProperties": {
 							"variableName": "maxSalary",
 							"value": {
-								"value": "@string(activity('cache sink to activity').output.runStatus.output.sink1.value[0].MaxSal)",
+								"value": "@string(activity('cache sink to activity').output.runStatus.output.sink1.value[0].salary\n)",
 								"type": "Expression"
 							}
 						}
