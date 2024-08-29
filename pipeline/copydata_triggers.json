@@ -40,7 +40,21 @@
 							"type": "AzureBlobStorageWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Info",
+							"enableReliableLogging": true
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "adf_linkedservice_demo",
+								"type": "LinkedServiceReference"
+							},
+							"path": "adfdemo/output"
+						}
+					}
 				},
 				"inputs": [
 					{
