@@ -1,0 +1,51 @@
+{
+	"name": "empDep1",
+	"properties": {
+		"type": "Flowlet",
+		"typeProperties": {
+			"sources": [],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "empDep"
+				},
+				{
+					"name": "filter1",
+					"description": "Filtering rows using expressions on columns ' department' (like where in sql)"
+				},
+				{
+					"name": "emp"
+				},
+				{
+					"name": "dep"
+				},
+				{
+					"name": "outputData"
+				}
+			],
+			"scriptLines": [
+				"input(output(",
+				"          empid as string,",
+				"          { name} as string,",
+				"          { country} as string,",
+				"          { department} as string",
+				"     ),",
+				"     order: 0,",
+				"     allowSchemaDrift: true) ~> emp",
+				"input(output(",
+				"          depid as string,",
+				"          depname as string",
+				"     ),",
+				"     order: 1,",
+				"     allowSchemaDrift: true) ~> dep",
+				"filter1, dep join({ department} == depid,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> empDep",
+				"emp filter(notEquals({ department},'6')) ~> filter1",
+				"empDep output() ~> outputData"
+			]
+		}
+	}
+}
