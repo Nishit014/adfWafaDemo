@@ -166,6 +166,26 @@
 					},
 					"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
 						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfWafaDf_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "adfWafaDf_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
 						"value": "[parameters('trigger1_properties_SystemVariables_parameters_ExecutionDate')]"
@@ -173,7 +193,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'adfWafaDf_ArmTemplate_1')]"
+				"[resourceId('Microsoft.Resources/deployments', 'adfWafaDf_ArmTemplate_2')]"
 			]
 		}
 	]
