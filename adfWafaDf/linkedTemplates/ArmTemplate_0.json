@@ -179,6 +179,60 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/empDep1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Flowlet",
+				"typeProperties": {
+					"sources": [],
+					"sinks": [],
+					"transformations": [
+						{
+							"name": "empDep"
+						},
+						{
+							"name": "filter1",
+							"description": "Filtering rows using expressions on columns ' department' (like where in sql)"
+						},
+						{
+							"name": "emp"
+						},
+						{
+							"name": "dep"
+						},
+						{
+							"name": "outputData"
+						}
+					],
+					"scriptLines": [
+						"input(output(",
+						"          empid as string,",
+						"          { name} as string,",
+						"          { country} as string,",
+						"          { department} as string",
+						"     ),",
+						"     order: 0,",
+						"     allowSchemaDrift: true) ~> emp",
+						"input(output(",
+						"          depid as string,",
+						"          depname as string",
+						"     ),",
+						"     order: 1,",
+						"     allowSchemaDrift: true) ~> dep",
+						"filter1, dep join({ department} == depid,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> empDep",
+						"emp filter(notEquals({ department},'6')) ~> filter1",
+						"empDep output() ~> outputData"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -816,29 +870,6 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": "data.txt",
-						"folderPath": "output",
-						"container": "adfdemo"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adf_linkedservice_demo')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/outputFolder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adf_linkedservice_demo",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
 						"folderPath": "output",
 						"container": "adfdemo"
 					}
