@@ -107,9 +107,6 @@
 					},
 					"multiple_sql_db_properties_typeProperties_userName": {
 						"value": "[parameters('multiple_sql_db_properties_typeProperties_userName')]"
-					},
-					"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -128,6 +125,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

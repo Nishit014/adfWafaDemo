@@ -30,10 +30,6 @@
 		"multiple_sql_db_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "qwer"
-		},
-		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "sec-adfWafa"
 		}
 	},
 	"variables": {
@@ -181,6 +177,56 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adf_linkedservice_demo",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "wrongData.csv",
+						"folderPath": "input",
+						"container": "adfdemo"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "empld",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "gender",
+						"type": "String"
+					},
+					{
+						"name": "doj",
+						"type": "String"
+					},
+					{
+						"name": "depid",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adf_linkedservice_demo')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Json1')]",
@@ -800,29 +846,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adf_linkedservice_demo')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adf_linkedservice_keyVault')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "https://www.youtube.com/watch?v=9BawMq0CVbs&list=PLMWaZteqtEaLTJffbbBzVOv9C0otal1FO&index=75",
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AzureKeyVault1_linkedService",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1_linkedService')]"
 			]
 		}
 	]
