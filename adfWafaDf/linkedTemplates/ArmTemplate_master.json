@@ -148,24 +148,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
-						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourcePath')]"
-					},
-					"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
-						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourceFile')]"
-					},
-					"eventTrigger_properties_typeProperties_scope": {
-						"value": "[parameters('eventTrigger_properties_typeProperties_scope')]"
-					},
-					"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
-						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline')]"
-					},
-					"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
-						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_sourceTable')]"
-					},
-					"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
-						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
 					}
 				}
 			},
@@ -186,6 +168,24 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
+						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourcePath')]"
+					},
+					"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
+						"value": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourceFile')]"
+					},
+					"eventTrigger_properties_typeProperties_scope": {
+						"value": "[parameters('eventTrigger_properties_typeProperties_scope')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_sourceTable')]"
+					},
+					"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
+						"value": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
 					},
 					"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
 						"value": "[parameters('trigger1_properties_SystemVariables_parameters_ExecutionDate')]"

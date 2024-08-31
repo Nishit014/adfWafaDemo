@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfWafaDf"
 		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
+			"type": "string",
+			"defaultValue": "@triggerBody().filePath"
+		},
+		"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"eventTrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/61324558-7f3d-4157-94c4-11ff85279d78/resourceGroups/ADF_WAFA_RG_/providers/Microsoft.Storage/storageAccounts/adfwafastorage"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
+			"type": "string",
+			"defaultValue": "testDb"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "testTable1"
+		},
+		"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
+			"type": "string",
+			"defaultValue": "testTable2"
+		},
 		"trigger1_properties_SystemVariables_parameters_ExecutionDate": {
 			"type": "string",
 			"defaultValue": "@formatDateTime(@trigger().scheduledTime,\"YYYY-MM-DD\")"
@@ -16,6 +40,71 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/eventTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "with parameters",
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "copydata_triggers",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourcePath": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourcePath')]",
+							"sourceFile": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourceFile')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/adfdemo/blobs/input/",
+					"blobPathEndsWith": ".txt",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('eventTrigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe2')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "dynamicSqlPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"db_name_pipeline": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline')]",
+							"sourceTable": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_sourceTable')]",
+							"destinationTable": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2024-08-22T05:55:00",
+						"timeZone": "India Standard Time"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/trigger1')]",
 			"type": "Microsoft.DataFactory/factories/triggers",

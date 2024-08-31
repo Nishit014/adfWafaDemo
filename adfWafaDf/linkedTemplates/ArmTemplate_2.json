@@ -6,36 +6,88 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "adfWafaDf"
-		},
-		"eventTrigger_properties_copydata_triggers_parameters_sourcePath": {
-			"type": "string",
-			"defaultValue": "@triggerBody().filePath"
-		},
-		"eventTrigger_properties_copydata_triggers_parameters_sourceFile": {
-			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
-		},
-		"eventTrigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/61324558-7f3d-4157-94c4-11ff85279d78/resourceGroups/ADF_WAFA_RG_/providers/Microsoft.Storage/storageAccounts/adfwafastorage"
-		},
-		"pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline": {
-			"type": "string",
-			"defaultValue": "testDb"
-		},
-		"pipe2_properties_dynamicSqlPipeline_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "testTable1"
-		},
-		"pipe2_properties_dynamicSqlPipeline_parameters_destinationTable": {
-			"type": "string",
-			"defaultValue": "testTable2"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pivot_surrogate')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "emp2",
+								"type": "DatasetReference"
+							},
+							"name": "emp"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "outData",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "outData",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pivot1"
+						},
+						{
+							"name": "surrogateKey1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as string,",
+						"          name as string,",
+						"          gender as string,",
+						"          country as string,",
+						"          department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> emp",
+						"emp pivot(groupBy(department),",
+						"     pivotBy(gender),",
+						"     totalEmp = count(id),",
+						"     columnNaming: 'total_$N$V_emp',",
+						"     lateral: true) ~> pivot1",
+						"emp keyGenerate(output(SurrogateId as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"pivot1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['pivot'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"surrogateKey1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['surrogate'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/sort_rank')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
@@ -184,6 +236,83 @@
 						"          projects",
 						"     ),",
 						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/userDefinedFunction')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "userDefinedFunction used in derivedColumn2",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "emp2",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "outData",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "outData",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "derivedColumn2"
+						}
+					],
+					"udfLibraries": [
+						{
+							"referenceName": "genderStringToInt",
+							"type": "DataFlowReference"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as string,",
+						"          name as string,",
+						"          gender as string,",
+						"          country as string,",
+						"          department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(gender = iif(gender== 'male',1,iif(gender=='female', 0, -1))) ~> derivedColumn1",
+						"source1 derive(gender = userDefinedFunctionForGenderStringToInt(gender)) ~> derivedColumn2",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['genderStringToInt'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"derivedColumn2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['genderStringToIntWithUserDefinedFunction'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2"
 					]
 				}
 			},
@@ -777,7 +906,9 @@
 				"annotations": [],
 				"lastPublishTime": "2024-08-25T19:20:53Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/pivot_surrogate')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/sortRank')]",
@@ -988,71 +1119,6 @@
 							"offset": "-30.10:00:00"
 						}
 					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eventTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "with parameters",
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "copydata_triggers",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourcePath": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourcePath')]",
-							"sourceFile": "[parameters('eventTrigger_properties_copydata_triggers_parameters_sourceFile')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/adfdemo/blobs/input/",
-					"blobPathEndsWith": ".txt",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('eventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipe2')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "dynamicSqlPipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"db_name_pipeline": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_db_name_pipeline')]",
-							"sourceTable": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_sourceTable')]",
-							"destinationTable": "[parameters('pipe2_properties_dynamicSqlPipeline_parameters_destinationTable')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2024-08-22T05:55:00",
-						"timeZone": "India Standard Time"
-					}
 				}
 			},
 			"dependsOn": []
