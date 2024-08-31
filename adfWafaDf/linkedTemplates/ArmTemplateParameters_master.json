@@ -14,6 +14,9 @@
 		"AzureKeyVault1_linkedService_properties_typeProperties_baseUrl": {
 			"value": "https://first-keyVault-wafa.vault.azure.net/"
 		},
+		"RestService1_properties_typeProperties_url": {
+			"value": "https://pokeapi.co/api/v2/pokemon"
+		},
 		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
 			"value": "sec-adfWafa"
 		},
