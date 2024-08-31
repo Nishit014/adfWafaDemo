@@ -1,5 +1,5 @@
 {
-	"name": "wrongData",
+	"name": "fuzzyJoin2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adf_linkedservice_demo",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "wrongData.csv",
+				"fileName": "fuzzyJoinData2.csv",
 				"folderPath": "input",
 				"container": "adfdemo"
 			},
@@ -21,23 +21,15 @@
 		},
 		"schema": [
 			{
-				"name": "empld",
+				"name": "Name",
 				"type": "String"
 			},
 			{
-				"name": "name",
+				"name": "Item",
 				"type": "String"
 			},
 			{
-				"name": "gender",
-				"type": "String"
-			},
-			{
-				"name": "doj",
-				"type": "String"
-			},
-			{
-				"name": "depid",
+				"name": "Quantity",
 				"type": "String"
 			}
 		]
