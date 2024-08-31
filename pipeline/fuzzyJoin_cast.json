@@ -1,5 +1,5 @@
 {
-	"name": "fuzzyJoin",
+	"name": "fuzzyJoin_cast",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "fuzzyJoin",
+						"referenceName": "fuzzyJoin_cast",
 						"type": "DataFlowReference"
 					},
 					"compute": {

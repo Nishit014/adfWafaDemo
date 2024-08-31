@@ -1,5 +1,5 @@
 {
-	"name": "fuzzyJoin",
+	"name": "fuzzyJoin_cast",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -31,6 +31,12 @@
 			"transformations": [
 				{
 					"name": "join1"
+				},
+				{
+					"name": "cast1"
+				},
+				{
+					"name": "cast2"
 				}
 			],
 			"scriptLines": [
@@ -50,11 +56,19 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
-				"source1, source2 join(fuzzyCompare(source1@Name, source2@Name, 80.00),",
+				"cast1, cast2 join(fuzzyCompare(source1@Name, source2@Name, 80.00),",
 				"     joinType:'inner',",
 				"     matchType:'fuzzy',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'off')~> join1",
+				"source1 cast(output(",
+				"          Quantity as integer",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"source2 cast(output(",
+				"          Quantity as integer",
+				"     ),",
+				"     errors: true) ~> cast2",
 				"join1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['fuzzyJoined'],",
