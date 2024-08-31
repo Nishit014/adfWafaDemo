@@ -1205,7 +1205,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/fuzzyJoin')]",
+			"name": "[concat(parameters('factoryName'), '/fuzzyJoin_cast')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1224,7 +1224,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "fuzzyJoin",
+								"referenceName": "fuzzyJoin_cast",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1248,7 +1248,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/fuzzyJoin')]"
+				"[concat(variables('factoryId'), '/dataflows/fuzzyJoin_cast')]"
 			]
 		},
 		{
@@ -3915,7 +3915,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/fuzzyJoin')]",
+			"name": "[concat(parameters('factoryName'), '/fuzzyJoin_cast')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -3949,6 +3949,12 @@
 					"transformations": [
 						{
 							"name": "join1"
+						},
+						{
+							"name": "cast1"
+						},
+						{
+							"name": "cast2"
 						}
 					],
 					"scriptLines": [
@@ -3968,11 +3974,19 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
-						"source1, source2 join(fuzzyCompare(source1@Name, source2@Name, 80.00),",
+						"cast1, cast2 join(fuzzyCompare(source1@Name, source2@Name, 80.00),",
 						"     joinType:'inner',",
 						"     matchType:'fuzzy',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'off')~> join1",
+						"source1 cast(output(",
+						"          Quantity as integer",
+						"     ),",
+						"     errors: true) ~> cast1",
+						"source2 cast(output(",
+						"          Quantity as integer",
+						"     ),",
+						"     errors: true) ~> cast2",
 						"join1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     partitionFileNames:['fuzzyJoined'],",
