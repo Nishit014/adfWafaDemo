@@ -17,6 +17,9 @@
 		"RestService1_properties_typeProperties_url": {
 			"value": "https://pokeapi.co/api/v2/pokemon"
 		},
+		"RestService2_properties_typeProperties_url": {
+			"value": "https://pokeapi.co/api/v2/pokemon?limit=20&offset={offset}"
+		},
 		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
 			"value": "sec-adfWafa"
 		},

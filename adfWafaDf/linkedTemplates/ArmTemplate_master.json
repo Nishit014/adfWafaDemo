@@ -23,6 +23,10 @@
 			"type": "string",
 			"defaultValue": "https://pokeapi.co/api/v2/pokemon"
 		},
+		"RestService2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://pokeapi.co/api/v2/pokemon?limit=20&offset={offset}"
+		},
 		"adf_linkedservice_keyVault_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "sec-adfWafa"
@@ -105,6 +109,9 @@
 					},
 					"RestService1_properties_typeProperties_url": {
 						"value": "[parameters('RestService1_properties_typeProperties_url')]"
+					},
+					"RestService2_properties_typeProperties_url": {
+						"value": "[parameters('RestService2_properties_typeProperties_url')]"
 					},
 					"multiple_sql_db_properties_typeProperties_server": {
 						"value": "[parameters('multiple_sql_db_properties_typeProperties_server')]"
