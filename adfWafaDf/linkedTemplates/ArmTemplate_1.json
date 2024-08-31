@@ -17,6 +17,58 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/emp3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adf_linkedservice_demo",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "emp3.csv",
+						"folderPath": "input",
+						"container": "adfdemo"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "gender",
+						"type": "String"
+					},
+					{
+						"name": "country",
+						"type": "String"
+					},
+					{
+						"name": "salary",
+						"type": "String"
+					},
+					{
+						"name": "department",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/empCountry')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -993,7 +1045,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/outputDataSet')]"
+				"[concat(variables('factoryId'), '/datasets/outputDataSet')]",
+				"[concat(variables('factoryId'), '/datasets/emp3')]"
 			]
 		},
 		{
@@ -1596,132 +1649,6 @@
 				"lastPublishTime": "2024-08-23T20:00:45Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/inputDataDataset')]",
-				"[concat(variables('factoryId'), '/datasets/outputDataSet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/validation')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Validation1",
-						"type": "Validation",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "outputFolder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"timeout": "0.00:00:05",
-							"sleep": 1,
-							"childItems": false
-						}
-					},
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Validation1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "inputDataDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "outputDataSet",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Validation1",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "outputFolder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-24T12:12:16Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/outputFolder')]",
 				"[concat(variables('factoryId'), '/datasets/inputDataDataset')]",
 				"[concat(variables('factoryId'), '/datasets/outputDataSet')]"
 			]
